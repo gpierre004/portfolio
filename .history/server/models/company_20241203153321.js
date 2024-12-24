@@ -1,7 +1,7 @@
 // models/company.js
 module.exports = (sequelize, DataTypes) => {
     const Company = sequelize.define('Company', {
-        symbol: {  // Changed from ticker to match transaction table
+        ticker: {
             type: DataTypes.STRING(10),
             primaryKey: true
         },
@@ -16,12 +16,7 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: true
         }
     }, {
-        tableName: 'companies',
-        indexes: [
-            {
-                fields: ['symbol']
-            }
-        ]
+        tableName: 'companies'
     });
     return Company;
-};
+    };

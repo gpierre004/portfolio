@@ -4,10 +4,7 @@ import { createContext, useContext, useState, useEffect } from 'react';
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem('user');
-    return savedUser ? JSON.parse(savedUser) : null;
-  });
+  const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('token'));
 
   useEffect(() => {
@@ -15,21 +12,12 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('token', token);
     } else {
       localStorage.removeItem('token');
-      localStorage.removeItem('user');
     }
   }, [token]);
 
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem('user', JSON.stringify(user));
-    } else {
-      localStorage.removeItem('user');
-    }
-  }, [user]);
-
-  const login = (userData, authToken) => {
+  const login = (userData, token) => {
     setUser(userData);
-    setToken(authToken);
+    setToken(token);
   };
 
   const logout = () => {

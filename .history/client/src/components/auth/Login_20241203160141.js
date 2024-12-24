@@ -42,19 +42,11 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
     try {
       const response = await loginUser(formData);
-      if (response.token && response.user) {
-        login(response.user, response.token);
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('user', JSON.stringify(response.user));
-        navigate('/dashboard');
-      } else {
-        setError('Invalid response from server');
-      }
+      login(response.user, response.token);
+      navigate('/dashboard');
     } catch (err) {
-      console.error('Login error:', err);
       setError(err.response?.data?.message || 'Login failed');
     }
   };

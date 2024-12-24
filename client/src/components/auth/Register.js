@@ -1,8 +1,8 @@
-// src/components/auth/Login.js
+// src/components/auth/Register.js
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { loginUser } from '../../services/api';
+import { registerUser } from '../../services/api';
 import {
   Box,
   Container,
@@ -24,13 +24,15 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   backgroundColor: 'rgba(255, 255, 255, 0.9)',
 }));
 
-const Login = () => {
+const Register = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
+    name: '',
     email: '',
     password: '',
+    confirmPassword: '',
   });
 
   const handleChange = (e) => {
@@ -43,8 +45,20 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    // Validate passwords match
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
     try {
-      const response = await loginUser(formData);
+      const response = await registerUser({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      });
+
       if (response.token && response.user) {
         login(response.user, response.token);
         localStorage.setItem('token', response.token);
@@ -54,8 +68,8 @@ const Login = () => {
         setError('Invalid response from server');
       }
     } catch (err) {
-      console.error('Login error:', err);
-      setError(err.response?.data?.message || 'Login failed');
+      console.error('Registration error:', err);
+      setError(err.response?.data?.message || 'Registration failed');
     }
   };
 
@@ -66,7 +80,7 @@ const Login = () => {
           Stock Portfolio Tracker
         </Typography>
         <Typography component="h2" variant="h5">
-          Sign In
+          Create Account
         </Typography>
         {error && (
           <Alert severity="error" sx={{ mt: 2, width: '100%' }}>
@@ -78,11 +92,22 @@ const Login = () => {
             margin="normal"
             required
             fullWidth
+            id="name"
+            label="Full Name"
+            name="name"
+            autoComplete="name"
+            autoFocus
+            value={formData.name}
+            onChange={handleChange}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
             id="email"
             label="Email Address"
             name="email"
             autoComplete="email"
-            autoFocus
             value={formData.email}
             onChange={handleChange}
           />
@@ -94,8 +119,18 @@ const Login = () => {
             label="Password"
             type="password"
             id="password"
-            autoComplete="current-password"
             value={formData.password}
+            onChange={handleChange}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="confirmPassword"
+            label="Confirm Password"
+            type="password"
+            id="confirmPassword"
+            value={formData.confirmPassword}
             onChange={handleChange}
           />
           <Button
@@ -104,11 +139,11 @@ const Login = () => {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Sign In
+            Sign Up
           </Button>
           <Box sx={{ textAlign: 'center' }}>
-            <Link href="/register" variant="body2">
-              {"Don't have an account? Sign Up"}
+            <Link href="/login" variant="body2">
+              {"Already have an account? Sign In"}
             </Link>
           </Box>
         </Box>
@@ -117,4 +152,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

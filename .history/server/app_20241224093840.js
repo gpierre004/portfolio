@@ -19,7 +19,10 @@ app.set('trust proxy', 1);
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
-
+app.use(cors({
+  origin: 'http://localhost:5000', // Allow your frontend application
+  credentials: true
+}));
 
 // Rate limiting
 const limiter = rateLimit({

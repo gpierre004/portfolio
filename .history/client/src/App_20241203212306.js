@@ -4,7 +4,6 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { AuthProvider } from './context/AuthContext';
 import Login from './components/auth/Login';
-import Register from './components/auth/Register';
 import Dashboard from './components/dashboard/Dashboard';
 import Settings from './components/settings/Settings';
 import PrivateRoute from './components/auth/PrivateRoute';
@@ -28,7 +27,6 @@ function App() {
         <Router>
           <Routes>
             <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
             <Route
               path="/dashboard"
               element={
